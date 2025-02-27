@@ -47,9 +47,8 @@ class DB:
     # LAB 4 FUNCTIONS  #
     ####################
 # 1. CREATE FUNCTION TO INSERT DATA IN TO THE RADAR COLLECTION
-
     def insertData(self, data):
-        ''' Insert data into the radar collection '''
+        ''' Insert data into radar collection '''
         try:
             remotedb = self.remoteMongo('mongodb://%s:%s@%s:%s' % (self.username, self.password, self.server, self.port), tls=self.tls)
             result = remotedb.ELET2415.radar.insert_one(data)
@@ -58,10 +57,10 @@ class DB:
             print("insertData Error: ", msg)
         else:
             return result
+        
     # 2. CREATE FUNCTION TO RETRIEVE ALL DOCUMENTS FROM RADAR COLLECT BETWEEN SPECIFIED DATE RANGE. MUST RETURN A LIST OF DOCUMENTS
-
     def retrieve_radar(self, start, end):
-        '''Retrieves all documents from the 'radar' collection between specified date range'''
+        '''Retrieves all documents from 'radar' collection in specified range'''
         try:
             start = int(start)
             end = int(end)
@@ -76,16 +75,13 @@ class DB:
             return result
 
     # 3. CREATE A FUNCTION TO COMPUTE THE ARITHMETIC AVERAGE ON THE 'reserve' FEILED/VARIABLE, USING ALL DOCUMENTS FOUND BETWEEN SPECIFIED START AND END TIMESTAMPS. RETURNS A LIST WITH A SINGLE OBJECT INSIDE
-
     def average_radar(self, start, end):
-        '''Computes the arithmetic average on the 'reserve' field/variable, using all documents found between specified start and end timestamps'''
+        '''Computes average on the 'reserve' variable, using documents in specified range'''
         try:
             start = int(start)
             end = int(end)
-
             remotedb = self.remoteMongo('mongodb://%s:%s@%s:%s' % (self.username, self.password, self.server, self.port), tls=self.tls)
-            result = result = remotedb.ELET2415.radar.aggregate([{"$match": {"timestamp": {"$gte": start, "$lte": end}}}, {
-                                                                "$group": {"_id": None, "average": {"$avg": "$reserve"}}}, {"$project": {"_id": 0, "average": 1}}])
+            result = result = remotedb.ELET2415.radar.aggregate([{"$match": {"timestamp": {"$gte": start, "$lte": end}}}, {"$group": {"_id": None, "average": {"$avg": "$reserve"}}}, {"$project": {"_id": 0, "average": 1}}])
 
         except Exception as e:
             print(f"average_radar() error: {e}")
@@ -94,12 +90,10 @@ class DB:
             return result
 
     # 4. CREATE A FUNCTION THAT INSERT/UPDATE A SINGLE DOCUMENT IN THE 'code' COLLECTION WITH THE PROVIDED PASSCODE
-
     def setPass(self, passcode):
-        ''' Update the document in the 'code' collection with the new passcode '''
+        ''' Update document in 'code' collection'''
         passcode = str(passcode)
         try:
-            # Update the document in the 'code' collection with the new passcode
             remotedb = self.remoteMongo('mongodb://%s:%s@%s:%s' % (self.username, self.password, self.server, self.port), tls=self.tls)
             item = remotedb.ELET2415.code.find_one_and_update(
                 {}, {'$set': {'code': passcode}}, upsert=True, projection={'_id': False})
@@ -111,17 +105,17 @@ class DB:
 
     # 5. CREATE A FUNCTION THAT RETURNS A COUNT, OF THE NUMBER OF DOCUMENTS FOUND IN THE 'code' COLLECTION WHERE THE 'code' FEILD EQUALS TO THE PROVIDED PASSCODE.
     #    REMEMBER, THE SCHEMA FOR THE SINGLE DOCUMENT IN THE 'code' COLLECTION IS {"type":"passcode","code":"0070"}
-
     def count_passcodes(self, passcode):
-        '''Returns the number of passcodes found in the 'code' collection'''
+        '''Returns total number of passcodes found in the 'code' collection'''
         try:
             passcode = str(passcode)
-
             remotedb = self.remoteMongo('mongodb://%s:%s@%s:%s' % (self.username, self.password, self.server, self.port), tls=self.tls)
             result = remotedb.ELET2415.code.count_documents({"code": passcode})
+        
         except Exception as e:
             print(f"count_passcodes() error: {e}")
             return False
+        
         else:
             return result
 
