@@ -8,11 +8,8 @@ from random import randint
 from json import dumps, loads
 from time import sleep
 # from .config import Config
-# from .functions import DB
-
 
 class MQTT:
-
     # ID = f"IOT_B_1000"
     ID = f"IOT_B_{randint(1, 1000000)}"
 
@@ -79,7 +76,6 @@ class MQTT:
             print("MQTT: Unexpected Disconnection.")
 
     # DEFINE CALLBACK FUNCTIONS FOR EACH TOPIC
-
     def update(self, client, userdata, msg):
         try:
             topic = msg.topic
