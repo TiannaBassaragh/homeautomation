@@ -15,14 +15,11 @@ export const useAppStore = defineStore(
     const setPasscode = async (passcode) => {
       const toast_status = {
         title: "Passcode Update Request",
-        body: "Your passcode is atempted to update",
+        body: "Updating passcode",
         mode: "loader",
       };
 
       const toast_id = useToast().loader(toast_status);
-
-      // FETCH REQUEST WILL TIMEOUT AFTER 20 SECONDS
-      // console.log(passcode);
       const controller = new AbortController();
       const signal = controller.signal;
       setTimeout(() => {
@@ -49,7 +46,7 @@ export const useAppStore = defineStore(
             if (data["status"] == "complete") {
               useToast().success({
                 title: "Passcode Updated",
-                body: "Your passcode was updated to " + passcode,
+                body: "New passcode: " + passcode,
                 canTimeout: true,
                 duration: 3000,
               });
@@ -60,7 +57,7 @@ export const useAppStore = defineStore(
               console.log("setPasscode returned no data");
               useToast().error({
                 title: "Passcode Update Failed",
-                body: "Your passcode was not updated: setPasscode returned no data",
+                body: "Passcode not updated: setPasscode returned no data",
                 canTimeout: true,
                 duration: 3000,
               });
@@ -71,17 +68,16 @@ export const useAppStore = defineStore(
           console.log(data);
           useToast().error({
             title: "Passcode Update Failed",
-            body: "Your passcode was not updated: " + data,
+            body: "Passcode not updated: " + data,
             canTimeout: true,
             duration: 3000,
           });
         }
       } catch (err) {
         console.error("setPasscode error: ", err.message);
-
         useToast().error({
           title: "Passcode Update Failed",
-          body: "Your passcode was not updated: " + err.message,
+          body: "Passcode not updated: " + err.message,
           canTimeout: true,
           duration: 3000,
         });
@@ -94,9 +90,7 @@ export const useAppStore = defineStore(
       // FETCH REQUEST WILL TIMEOUT AFTER 20 SECONDS
       const controller = new AbortController();
       const signal = controller.signal;
-      setTimeout(() => {
-        controller.abort();
-      }, 60000);
+      setTimeout(() => {controller.abort();}, 60000);
       const URL = `/api/avg/${start}/${end}`;
       try {
         const response = await fetch(URL, { method: "GET", signal: signal });
@@ -153,9 +147,6 @@ export const useAppStore = defineStore(
       }
       return [];
     };
-    // STATES
-
-    // ACTIONS
 
     return {
       // EXPORTS
