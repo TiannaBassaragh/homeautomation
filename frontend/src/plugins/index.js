@@ -19,8 +19,6 @@ import 'vue-toastify/index.css';
 // theme styles
 import 'vue-toastify/themes/dark.css';
 
-
-
 export function registerPlugins (app) {
   app
     .use(vuetify)
@@ -29,7 +27,6 @@ export function registerPlugins (app) {
     .use(toastify, { customNotifications: {
       authenticationError: {
           body: 'Authentication error',
-          // ... rest of the toast options here
       }
   } });
 
