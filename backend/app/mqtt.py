@@ -24,8 +24,7 @@ class MQTT:
         self.dumps = dumps
         self.sleep = sleep
         self.mongo = mongo
-        self.client = mqtt.Client(
-            client_id=self.ID, clean_session=True, reconnect_on_failure=True)
+        self.client = mqtt.Client(client_id=self.ID, clean_session=True, reconnect_on_failure=True)
         self.client.on_connect = self.on_connect
         self.client.on_message = self.on_message
         self.client.on_disconnect = self.on_disconnect
@@ -39,14 +38,12 @@ class MQTT:
         self.client.connect_async("www.yanacreations.com", 1883, 60)
 
     def connack_string(self, rc):
-        connection = {0: "Connection successful", 1: "Connection refused - incorrect protocol version", 2: "Connection refused - invalid client identifier",
-                      3: "Connection refused - server unavailable", 4: "Connection refused - bad username or password", 5: "Connection refused - not authorised"}
+        connection = {0: "Connection successful", 1: "Connection refused - incorrect protocol version", 2: "Connection refused - invalid client identifier", 3: "Connection refused - server unavailable", 4: "Connection refused - bad username or password", 5: "Connection refused - not authorised"}
         return connection[rc]
 
     def on_connect(self, client, userdata, flags, rc):
         # Called when the broker responds to our connection request.
-        print("\n\nMQTT: " + self.connack_string(rc),
-              " ID: ", client._client_id.decode('utf-8'))
+        print("\n\nMQTT: " + self.connack_string(rc), " ID: ", client._client_id.decode('utf-8'))
         # Subscribing in on_connect() means that if we lose the connection and
         # reconnect then subscriptions will be renewed.
         client.subscribe(self.sub_topics)
@@ -68,6 +65,7 @@ class MQTT:
         # The callback for when a PUBLISH message is received from the server.
         try:
             print(msg.topic+" "+str(msg.payload.decode("utf-8")))
+            
         except Exception as e:
             print(f"MQTT: onMessage Error: {str(e)}")
 
