@@ -18,12 +18,8 @@ export const useMqttStore = defineStore(
     const mqtt = ref(null);
     const host = ref("www.yanacreations.com"); // Host Name or IP address
     const port = ref(9002); // Port number
-    const payload = ref({
-      id: 620162297,
-      timestamp: 1702566538,
-      number: 0,
-      ledA: 0,
-      ledB: 0,
+    const payload = ref({"id":"620156694","type":"ultrasonic","radar":0,"waterheight":0,"reserve":0,"percentage":0} ); // Set initial values for payload
+    const payloadTopic      = ref("");
     }); // Set initial values for payload
     const payloadTopic = ref("");
     const subTopics = ref({});
@@ -72,9 +68,7 @@ export const useMqttStore = defineStore(
       try {
         payload.value = JSON.parse(response.payloadString);
         payloadTopic.value = response.destinationName;
-        console.log(
-          `Topic : ${payloadTopic.value} \nPayload : ${response.payloadString}`
-        );
+        console.log(`Topic : ${payloadTopic.value} \nPayload : ${response.payloadString}`);
       } catch (error) {
         console.log(`onMessageArrived Error: ${error}`);
       }
@@ -82,14 +76,11 @@ export const useMqttStore = defineStore(
 
     const makeid = (length) => {
       var result = "";
-      var characters =
-        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+      var characters ="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
       var charactersLength = characters.length;
 
       for (var i = 0; i < length; i++) {
-        result += characters.charAt(
-          Math.floor(Math.random() * charactersLength)
-        );
+        result += characters.charAt(Math.floor(Math.random() * charactersLength));
       }
       return "IOT_F_" + result;
     };
@@ -105,9 +96,7 @@ export const useMqttStore = defineStore(
     const sub_onFailure = (response) => {
       // called when the subscribe request has failed or timed out.
       const topic = response.invocationContext.topic;
-      console.log(
-        `MQTT: Failed to subscribe to - ${topic} \nError message : ${response.errorMessage}`
-      );
+      console.log(`MQTT: Failed to subscribe to - ${topic} \nError message : ${response.errorMessage}`);
     };
 
     const subscribe = (topic) => {
@@ -182,30 +171,15 @@ export const useMqttStore = defineStore(
     const connect = () => {
       var IDstring = makeid(12);
 
-      console.log(
-        `MQTT: Connecting to Server : ${host.value} Port : ${port.value}`
-      );
-      mqtt.value = new Paho.MQTT.Client(
-        host.value,
-        port.value,
-        "/mqtt",
-        IDstring
-      );
+      console.log(`MQTT: Connecting to Server : ${host.value} Port : ${port.value}`);
+      mqtt.value = new Paho.MQTT.Client(host.value, port.value, "/mqtt", IDstring);
 
-      var options = {
-        timeout: 3,
-        onSuccess: onSuccess,
-        onFailure: onFailure,
-        invocationContext: { host: host.value, port: port.value },
-        useSSL: false,
-        reconnect: true,
-        uris: [`ws://${host.value}:${port.value}/mqtt`],
-      };
-
-      mqtt.value.onConnectionLost = onConnectionLost;
-      mqtt.value.onMessageArrived = onMessageArrived;
-      mqtt.value.onConnected = onConnected;
-      mqtt.value.connect(options);
+      var options   = { timeout: 3, onSuccess: onSuccess, onFailure: onFailure, invocationContext: {"host":host.value,"port": port.value }, useSSL: false, reconnect: true, uris:[`ws://${host.value}:${port.value}/mqtt`] }; 
+        
+        mqtt.value.onConnectionLost   = onConnectionLost;
+        mqtt.value.onMessageArrived   = onMessageArrived;
+        mqtt.value.onConnected        = onConnected;
+        mqtt.value.connect(options);
     };
 
     return {
@@ -218,6 +192,4 @@ export const useMqttStore = defineStore(
       connect,
       disconnect,
     };
-  },
-  { persist: true }
-);
+  },  { persist: true });
