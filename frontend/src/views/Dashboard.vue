@@ -4,26 +4,25 @@
       <v-col cols="2">
         <v-sheet>
           <v-card height="360px" width="175px">
-
-            <v-slider class="slider" readonly thumb-label color="green" v-model="slider1" direction="vertical"
-              label="Height (In)" track-size="50">
-
-            </v-slider>
+            <v-slider class="slider" readonly thumb-label color="green" v-model="slider1" direction="vertical" label="Height (In)" track-size="50"></v-slider>
           </v-card>
         </v-sheet>
       </v-col>
+      
       <v-col cols="10">
         <figure class="highcharts-figure">
           <div id="container"></div>
         </figure>
       </v-col>
     </v-row>
+    
     <v-row>
       <v-col cols="8">
         <figure class="highcharts-figure">
           <div id="container0"></div>
         </figure>
       </v-col>
+      
       <v-col cols="4">
         <v-sheet max-width="350px">
           <v-card class="mb-5" style="max-width: 350px" variant="tonal" color="primary" density="compact" rounded="lg"
@@ -138,7 +137,6 @@ const CreateCharts = async () => {
         data: [],
         turboThreshold: 0,
         color: Highcharts.getOptions().colors[0],
-        // pointWidth: 1000,
       },
     ],
     plotOptions: {
