@@ -22,17 +22,15 @@ from math import floor
 #####################################
 #   Routing for your application    #
 #####################################
+# 1. CREATE ROUTE FOR '/api/set/combination'
 @app.route('/api/set/combination', methods=['POST'])
 def update_passcode():
-    # Retrieve the passcode from the 'code' collection in the databas
     passcode = request.json.get('code')
 
     print(f"passcode: {passcode}")
 
     if request.method == "POST":
-        try:
-            # Update the document in the 'code' collection with the new passcode
-            item = mongo.setPass(passcode)
+        try:item = mongo.setPass(passcode)
             if item:
                 return jsonify({"status": "complete", "data": "complete"})
         except Exception as e:
@@ -51,23 +49,26 @@ def check_passcode():
             passcode = form.get('passcode')
 
             if not passcode:
+                
                 return jsonify({
                     "status": "failed",
-                    "message": "Passcode is required"
+                    "message": "Enter passcode"
                 }), 400
 
-            # CHECK IF PASSCODE EXISTS IN THE 'code' COLLECTION
             result = mongo.count_passcodes(passcode)
+            
             if result != 0:
                 return jsonify({
                     "status": "success",
                     "data": "complete"
                 }), 200
+                
             else:
                 return jsonify({
                     "status": "failed",
                     "message": "Invalid passcode"
                 }), 401
+        
         except Exception as e:
             app.logger.error(f"check_passcode() error: {e}")
             return jsonify({
@@ -75,28 +76,20 @@ def check_passcode():
                 "message": "Internal server error"
             }), 500
 
-    return jsonify({
-        "status": "failed",
-        "message": "Method not allowed"
-    }), 405
+    return jsonify({"status": "failed", "message": "Get help. Method not valid."}), 405
 
 # 3. CREATE ROUTE FOR '/api/update'
-
-
 @app.route('/api/update', methods=['POST'])
 def update_radar():
     '''Updates the 'radar' collection'''
     if request.method == "POST":
         try:
             jsonDoc = request.get_json()
-            # Update the document in the 'code' collection with the new passcode
-
             timestamp = datetime.now().timestamp()
             timestamp = floor(timestamp)
             jsonDoc['timestamp'] = timestamp
 
             Mqtt.publish("620162297", mongo.dumps(jsonDoc))
-            # Mqtt.publish("620156144_pub",mongo.dumps(jsonDoc))
             Mqtt.publish("620162297_sub", mongo.dumps(jsonDoc))
 
             print(f"MQTT: {jsonDoc}")
@@ -104,14 +97,14 @@ def update_radar():
             item = mongo.insertData(jsonDoc)
             if item:
                 return jsonify({"status": "complete", "data": "complete"})
+        
         except Exception as e:
             msg = str(e)
             print(f"update Error: {msg}")
+        
         return jsonify({"status": "failed", "data": "failed"})
 
 # 4. CREATE ROUTE FOR '/api/reserve/<start>/<end>'
-
-
 @app.route('/api/reserve/<start>/<end>', methods=['GET'])
 def get_reserve_radar(start, end):
     '''Returns the 'reserve' field/variable, using all documents found between specified start and end timestamps'''
@@ -123,14 +116,13 @@ def get_reserve_radar(start, end):
             result = list(mongo.retrieve_radar(start, end))
             if result:
                 return jsonify({"status": "success", "data": result})
+        
         except Exception as e:
             print(f"get_reserve_radar() error: {e}")
 
         return jsonify({"status": "failed", "data": "failed"})
 
 # 5. CREATE ROUTE FOR '/api/avg/<start>/<end>'
-
-
 @app.route('/api/avg/<start>/<end>', methods=['GET'])
 def get_average_radar(start, end):
     '''Returns the average of the 'reserve' field/variable, using all documents found between specified start and end timestamps'''
@@ -148,9 +140,9 @@ def get_average_radar(start, end):
     return jsonify({"status": "failed", "data": "failed"})
 
 
-@app.route('/api/test')
-def send():
-    return jsonify({"status": "success"})
+# @app.route('/api/test')
+# def send():
+#     return jsonify({"status": "success"})
 
 
 @app.route('/api/file/get/<filename>', methods=['GET'])
