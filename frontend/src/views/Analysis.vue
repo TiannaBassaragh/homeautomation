@@ -3,50 +3,15 @@
     <v-row class="row1">
       <v-col cols="4">
         <v-sheet class="sheet">
-          <br />
-
-          <v-text-field
-            v-model="start"
-            label="Start date"
-            type="Date"
-            dense
-            solo-inverted
-            class="mr-5"
-            :style="{ padding: '17px', maxWidth: '300px' }"
-            flat
-          ></v-text-field>
-          <v-text-field
-            v-model="end"
-            label="End date"
-            type="Date"
-            dense
-            solo-inverted
-            class="mr-5"
-            :style="{ padding: '17px', maxWidth: '300px' }"
-            flat
-          ></v-text-field>
-          <br />
-          <v-btn
-            class="text-none mb-4"
-            @click="updateCards(); updateScatter(); updateLineCharts(); "
-            id="analyze"
-            color="surface"
-            variant="elevated"
-          >Analyze</v-btn>
+          <br/>
+          <v-text-field v-model="start" label="Start date" type="Date" dense solo-inverted class="mr-5" :style="{ padding: '17px', maxWidth: '300px' }" flat></v-text-field>
+          <v-text-field v-model="end" label="End date" type="Date" dense solo-inverted class="mr-5" :style="{ padding: '17px', maxWidth: '300px' }" flat></v-text-field>
+          <br/>
+          <v-btn class="text-none mb-4" @click="updateCards(); updateScatter(); updateLineCharts(); " id="analyze" color="surface" variant="elevated">Analyze</v-btn>
         </v-sheet>
       </v-col>
       <v-col cols="3" align="center">
-        <v-card
-          title="Average"
-          subtitle="For the selected period"
-          width="350"
-          height="200"
-          variant="elevated"
-          color="surface"
-          density="compact"
-          rounded="lg"
-          align="center"
-        >
+        <v-card title="Average" subtitle="For the selected period" width="350" height="200" variant="elevated" color="surface" density="compact" rounded="lg" align="center">
           <v-card-item align="center">
             <span class="text-h1 text-black">
               {{ avg.value }}
